@@ -1,0 +1,165 @@
+@charset "utf-8";.center-text{
+    text-align: center;
+    width: 100%;
+}
+.fake-button{
+    width: 100%;
+}
+.fake-button-colors{
+    color: white;
+    background-color: #66bc46;
+    display: block;
+    padding-top: 3px;
+
+}
+
+.fake-button-colors:hover{
+text-decoration: none;
+    color: gray;
+}
+
+#vmMainPageOPC input.updatebtn, #vmMainPageOPC input.updatebtn:hover {
+    background: unset;
+    display: inline-block;
+    width: 20px;
+    height: 25px;
+    vertical-align: middle;
+    border: none;
+    margin: 2px;
+}
+
+div#vmMainPageOPC div#basket_container input {
+    width:70px;
+}
+
+.delbtn, div#vmMainPageOPC a{
+    color: black;
+    height: 26px;
+    margin: 2px;
+    display: inline-block;
+    padding-top: 2px;
+    float: right;
+}
+div#vmMainPageOPC a.deletebtn {
+    background: transparent url(https://hostaotdykh.ru/templates/yootheme/css/images/can.png) no-repeat top left !important;
+    color: black;
+    display: inline-block;
+    width: 70px;
+    height: 25px;
+    margin: 2px;
+}
+
+div.op_basket_row > div.op_col2_2 > a{
+    float: left;
+}
+
+
+div#vmMainPageOPC a:hover, div#vmMainPageOPC a:active, div#vmMainPageOPC a:focus, div#vmMainPageOPC .op_basket_row a:hover {
+    text-decoration: none;
+    background: none;
+    background-color: transparent;
+    outline: none !important;
+    color: black;
+}
+
+.swoi-text {
+    font-style: italic;
+    text-align: center;
+    font-weight: 400;
+    font-size: 17px;
+}
+
+.button-green {
+    display: inline-block;
+    vertical-align: top;
+    padding: 10px 20px;
+
+    background-color: #66bc46;
+    border-radius: 50%;
+    text-decoration: none;
+    color: #fff;
+    font-size: 15px;
+}
+
+.button-green:hover {
+    background-color: #317f14;
+}
+
+
+.licens {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-gap: 40px;
+  margin: 40px 0;
+}
+
+.licens-vertical .licens-img {
+  width: 100%;
+  max-width: 100%;
+  height: 350px;
+}
+
+.licens-img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 250px;
+    object-fit: contain;
+}
+
+.licens-link {
+  padding: 10px;
+  box-shadow: 0 4px 10px rgb(0,0,0,0.2);
+  transition: all .2s linear;display: flex;
+  justify-content: space-between;
+  border-radius:10px;
+}
+
+.licens-link:focus,
+.licens-link:hover {
+   box-shadow: 0 4px 10px rgb(0,0,0,0.4);
+}
+
+.tm-toolbar {
+      background: #0a417d !important;
+}
+
+.browse-view .row .product .spacer img, .related-products-view .row .product .spacer img {
+  height: 292px !important;
+   object-fit: cover;
+}
+
+.orderby-displaynumber {
+  display: none;
+}
+
+#tm-main > div > div > div > div.category-view > div > div > div > div > div.vm-product-descr-container-1 > h2 > a {
+      min-height: 65px;
+    display: block;
+}
+
+@media (max-width: 767px) {
+	.licens {
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 20px;
+	}
+  
+  .browse-view .row .product .spacer img, .related-products-view .row .product .spacer img {
+  height: 200px !important;
+}
+}
+
+@media (max-width: 565px) {
+	.licens {
+		grid-template-columns: 1fr;
+	}
+  
+   .browse-view .row .product .spacer img, .related-products-view .row .product .spacer img {
+  height: auto !important;
+}
+  
+  #tm-main > div > div > div > div.category-view > div > div > div > div > div.vm-product-descr-container-1 > h2 > a {
+      min-height:0;
+    display: block;
+}
+}

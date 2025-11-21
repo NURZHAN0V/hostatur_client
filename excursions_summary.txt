@@ -1,0 +1,51 @@
+URL	Название	Цена	Продолжительность	Изображений	Категория
+https://hostaotdykh.ru/ekskursii/gagra-pitcynda-n-afon-detail.html	Экскурсии : Гагра, Пицунда, Новый Афон	500 руб	14ч	10	Общие
+https://hostaotdykh.ru/ekskursii/33-vodopada-volkonskij-dolmen-detail.html	Экскурсии по Сочи и Абхазии, цены 2018 404 - Запрашиваемый товар не существует!	1000 руб	None	19	Общие
+https://hostaotdykh.ru/ekskursii/olimpijskij-park-detail.html	Экскурсии : Олимпийский парк	1200 руб	Продолжительность: 4ч	9	Общие
+https://hostaotdykh.ru/ekskursii/krasnaya-polyana-park-vodopadov-detail.html	Экскурсии : «Роза Хутор» Парк водопадов Минделиха+ бонус :КЭЦ «Моя Россия».	1000 руб	Продолжительность: 8ч	10	Общие
+https://hostaotdykh.ru/ekskursii/33-vodopada-kavkazskoe-zastolje-shoy-detail.html	Экскурсии : Долина легенд и 33 водопада.	1000 руб	Продолжительность: 10ч	7	Общие
+https://hostaotdykh.ru/ekskursii/syhym-termalnyj-istochnik-detail.html	Экскурсии : Сухум – Термальный источник	500 руб	14ч	8	Общие
+https://hostaotdykh.ru/ekskursii/kyrorty-krasnoi-polyany-detail.html	Экскурсии по Сочи и Абхазии, цены 2018 404 - Запрашиваемый товар не существует!	1000 руб	None	19	Общие
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/%D0%BA%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F-%D0%BF%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0-detail.html	Экскурсии по Сочи и Абхазии, цены 2018 404 - Запрашиваемый товар не существует!	1000 руб	None	19	Сочи
+https://hostaotdykh.ru/ekskursii/transfer-v-skypark-detail.html	Экскурсии : Трансфер в SkyPark	400 руб	Продолжительность: 4ч	10	Общие
+https://hostaotdykh.ru/ekskursii/voroncovskaya-peschera-detail.html	Экскурсии : Воронцовская пещера	1300 руб	6ч	10	Общие
+https://hostaotdykh.ru/ekskursii/po-svyatym-mestam-abhazii-detail.html	Экскурсии : По святым местам Абхазии	500 руб	Продолжительность: 11ч	10	Общие
+https://hostaotdykh.ru/ekskursii/krasnaya-polyana-detail.html	Экскурсии : Роза Хутор + Олимпийский парк	1000 руб	10ч	15	Общие
+https://hostaotdykh.ru/ekskursii/delfinarij-detail.html	Экскурсии : Дельфинарий	900 руб	5ч	5	Общие
+https://hostaotdykh.ru/ekskursii/gegskij-vodopad-detail.html	Экскурсии : Гегский водопад	500 руб	Продолжительность: 10ч	12	Общие
+https://hostaotdykh.ru/ekskursii/syhym-gagra-pitcynda-afon-detail.html	Экскурсии : Сухум, Гагра, Пицунда, Н. Афон	500 руб	Продолжительность: 11ч	11	Общие
+https://hostaotdykh.ru/ekskursii/gora-ahun-agyrskoe-yschelje-detail.html	Экскурсии по Сочи и Абхазии, цены 2018 404 - Запрашиваемый товар не существует!	1000 руб	None	19	Общие
+https://hostaotdykh.ru/ekskursii/obzornaya-po-sochi-detail.html	Экскурсии : Обзорная по Сочи + Парк Ривьера	900 руб	6ч	7	Общие
+https://hostaotdykh.ru/ekskursii/jenskii-monastyr-hram-hrista-spasitelya-detail.html	Экскурсии по Сочи и Абхазии, цены 2018 404 - Запрашиваемый товар не существует!	1000 руб	None	19	Общие
+https://hostaotdykh.ru/ekskursii/zmeikovskie-vodopady-detail.html	Экскурсии по Сочи и Абхазии, цены 2018 404 - Запрашиваемый товар не существует!	1000 руб	None	19	Общие
+https://hostaotdykh.ru/ekskursii/bolshoe-kolco-abhazii-detail.html	Экскурсии : Большое кольцо Абхазии	500 руб	14ч	11	Общие
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/ledovoe-shoy-averbyha-detail.html	Экскурсии по Сочи и Абхазии, цены 2018 404 - Запрашиваемый товар не существует!	1000 руб	None	19	Сочи
+https://hostaotdykh.ru/ekskursii/dacha-stalina-agyrskoe-yschelie-detail.html	Экскурсии : Дача И.В.Сталина	900 руб	5ч	6	Общие
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/olimpijskij-park-detail.html	Сочи : Олимпийский парк	1200 руб	Продолжительность: 4ч	9	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/%D0%B3%D0%B0%D0%B7%D0%BF%D1%80%D0%BE%D0%BC-%D0%BB%D0%B0%D1%83%D1%80%D0%B0-%D0%B0%D0%BB%D1%8C%D0%BF%D0%B8%D0%BA%D0%B0-detail.html	Сочи : Курорт «Газпром Поляна» - 2 вершины за 1 день: Альпика+Лаура	3000 руб	10ч	10	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/vechernij-sochi-detail.html	Сочи 404 - Запрашиваемый товар не существует!	1000 руб	None	12	Сочи
+https://hostaotdykh.ru/ekskursii/abhasiya-ozero-ritca-detail.html	Экскурсии : Абхазия: озеро Рица	500 руб	10ч	12	Общие
+https://hostaotdykh.ru/ekskursii/sochi-stranitcy-proshlogo-i-nastoyashego-detail.html	Экскурсии по Сочи и Абхазии, цены 2018 404 - Запрашиваемый товар не существует!	1000 руб	None	19	Общие
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/kyrorty-krasnoi-polyany-detail.html	Экскурсии по Сочи и Абхазии, цены 2018 404 - Запрашиваемый товар не существует!	1000 руб	None	19	Сочи
+https://hostaotdykh.ru/ekskursii/akvapark-galaktika-transfer-detail.html	Экскурсии : Аквапарк в Красной поляне	4000 руб	Продолжительность: 6ч	7	Общие
+https://hostaotdykh.ru/ekskursii/33-vodopada-detail.html	Экскурсии по Сочи и Абхазии, цены 2018 404 - Запрашиваемый товар не существует!	1000 руб	None	19	Общие
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/krasnaya-polyana-detail.html	Сочи : Роза Хутор + Олимпийский парк	1000 руб	10ч	15	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/газпром-лаура-альпика-detail.html	Сочи : Курорт «Газпром Поляна» - 2 вершины за 1 день: Альпика+Лаура	3000 руб	10ч	10	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/obzornaya-po-sochi-detail.html	Сочи : Обзорная по Сочи + Парк Ривьера	900 руб	6ч	7	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/voroncovskaya-peschera-detail.html	Сочи : Воронцовская пещера	1300 руб	6ч	10	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/33-vodopada-kavkazskoe-zastolje-shoy-detail.html	Сочи : Долина легенд и 33 водопада.	1000 руб	Продолжительность: 10ч	7	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/delfinarij-detail.html	Сочи : Дельфинарий	900 руб	5ч	5	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/krasnaya-polyana-park-vodopadov-detail.html	Сочи : «Роза Хутор» Парк водопадов Минделиха+ бонус :КЭЦ «Моя Россия».	1000 руб	Продолжительность: 8ч	10	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/jenskii-monastyr-hram-georgiya-pobedonosca-detail.html	Сочи : Женский монастырь	1500 руб	5ч	7	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/transfer-v-skypark-detail.html	Сочи : Трансфер в SkyPark	400 руб	Продолжительность: 4ч	10	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/akvapark-galaktika-transfer-detail.html	Сочи : Аквапарк в Красной поляне	4000 руб	Продолжительность: 6ч	7	Сочи
+https://hostaotdykh.ru/ekskursii/ekskursii-sochi/dacha-stalina-agyrskoe-yschelie-detail.html	Сочи : Дача И.В.Сталина	900 руб	5ч	6	Сочи
+https://hostaotdykh.ru/ekskursii/jenskii-monastyr-hram-georgiya-pobedonosca-detail.html	Экскурсии : Женский монастырь	1500 руб	5ч	7	Общие
+https://hostaotdykh.ru/ekskursii/газпром-лаура-альпика-detail.html	Экскурсии : Курорт «Газпром Поляна» - 2 вершины за 1 день: Альпика+Лаура	3000 руб	10ч	10	Общие
+https://hostaotdykh.ru/ekskursii/ekskursii-abkhaziya/gegskij-vodopad-detail.html	Абхазия : Гегский водопад	500 руб	Продолжительность: 10ч	12	Абхазия
+https://hostaotdykh.ru/ekskursii/ekskursii-abkhaziya/syhym-gagra-pitcynda-afon-detail.html	Абхазия : Сухум, Гагра, Пицунда, Н. Афон	500 руб	Продолжительность: 11ч	11	Абхазия
+https://hostaotdykh.ru/ekskursii/ekskursii-abkhaziya/bolshoe-kolco-abhazii-detail.html	Абхазия : Большое кольцо Абхазии	500 руб	14ч	11	Абхазия
+https://hostaotdykh.ru/ekskursii/ekskursii-abkhaziya/abhasiya-ozero-ritca-detail.html	Абхазия : Абхазия: озеро Рица	500 руб	10ч	12	Абхазия
+https://hostaotdykh.ru/ekskursii/ekskursii-abkhaziya/syhym-termalnyj-istochnik-detail.html	Абхазия : Сухум – Термальный источник	500 руб	14ч	8	Абхазия
+https://hostaotdykh.ru/ekskursii/ekskursii-abkhaziya/gagra-pitcynda-n-afon-detail.html	Абхазия : Гагра, Пицунда, Новый Афон	500 руб	14ч	10	Абхазия
+https://hostaotdykh.ru/ekskursii/ekskursii-abkhaziya/po-svyatym-mestam-abhazii-detail.html	Абхазия : По святым местам Абхазии	500 руб	Продолжительность: 11ч	10	Абхазия

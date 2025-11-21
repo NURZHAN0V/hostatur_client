@@ -1,0 +1,7 @@
+try {
+function openAlert() {
+    alert('OK');
+}
+} catch (e) {
+console.error('Error in file:/templates/yootheme/js/openalert.js; Error:' + e.message);
+};
