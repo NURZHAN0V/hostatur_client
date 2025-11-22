@@ -48,14 +48,21 @@ function fixIndexHtmlPaths() {
         if (html.includes('/src/main.js')) {
           console.warn('Обнаружен путь /src/main.js, который должен был быть заменен Vite')
           // Пытаемся найти правильный путь к главному скрипту в assets
-          const assetMatch = html.match(/(href|src)="\/assets\/index-[^"]+\.js"/)
-          if (assetMatch) {
+          // Ищем любой JS файл в assets, который может быть главным скриптом
+          const assetMatches = html.matchAll(/(href|src)="\/assets\/[^"]+\.js"/g)
+          const assetArray = Array.from(assetMatches)
+
+          if (assetArray.length > 0) {
+            // Берем первый найденный JS файл из assets (обычно это главный скрипт)
+            const mainAsset = assetArray[0][0]
+            console.log('Найден главный скрипт в assets:', mainAsset)
             // Заменяем /src/main.js на правильный путь к assets с base URL
             html = html.replace(
               /(href|src)="\/src\/main\.js"/g,
-              assetMatch[0].replace(/="\/assets\//, `="${baseUrlNoSlash}/assets/`)
+              mainAsset.replace(/="\/assets\//, `="${baseUrlNoSlash}/assets/`)
             )
           } else {
+            console.warn('Не найден главный скрипт в assets, исправляем путь с base URL')
             // Если не нашли assets, просто исправляем путь с base URL
             html = html.replace(
               /(href|src)="\/src\/main\.js"/g,
