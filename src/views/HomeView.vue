@@ -2,9 +2,8 @@
   <div>
     <!-- Hero Section -->
     <section class="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
-      <!-- Video Background (скрыто, так как видео недоступно) -->
+      <!-- Video Background -->
       <video
-        v-if="false"
         ref="heroVideo"
         class="absolute inset-0 w-full h-full object-cover"
         autoplay
@@ -13,13 +12,16 @@
         playsinline
         preload="metadata"
         @error="handleVideoError"
+        @loadeddata="handleVideoLoaded"
       >
-        <!-- Видео доступное в РФ (используем placeholder, так как внешние источники могут быть недоступны) -->
-        <!-- Если у вас есть локальное видео, поместите его в public/videos/hero.mp4 и раскомментируйте: -->
-        <!-- <source :src="`${import.meta.env.BASE_URL}videos/hero.mp4`" type="video/mp4" /> -->
+        <!-- Локальное видео (приоритет) - поместите видео в public/videos/hero.mp4 -->
+        <source :src="`${import.meta.env.BASE_URL}videos/hero.mp4`" type="video/mp4" />
+        <!-- Альтернативные источники видео (может быть недоступно в РФ) -->
+        <!-- Можно попробовать другие CDN или использовать только локальное видео -->
       </video>
       <!-- Fallback: красивый градиент с морем/горами -->
       <div
+        v-if="videoError"
         class="absolute inset-0 bg-gradient-to-br from-blue-400 via-teal-500 to-cyan-600"
       >
         <!-- Дополнительный градиент для глубины -->
@@ -185,13 +187,19 @@ import { useExcursions } from '@/composables/useExcursions'
 const { loading, error, getPopularExcursions, loadExcursions, excursions: formattedExcursions } = useExcursions()
 const cartItems = ref([]) // TODO: подключить к store
 const heroVideo = ref(null)
-const videoError = ref(true) // По умолчанию true, так как видео недоступно
+const videoError = ref(false) // Начинаем с false, проверяем загрузку
+
+// Обработка успешной загрузки видео
+const handleVideoLoaded = () => {
+  videoError.value = false
+  console.log('Видео успешно загружено')
+}
 
 // Обработка ошибки загрузки видео
 const handleVideoError = (event) => {
   try {
     videoError.value = true
-    console.warn('Видео не загрузилось, используется fallback изображение')
+    console.warn('Видео не загрузилось, используется fallback градиент')
     // Скрываем видео элемент
     if (heroVideo.value) {
       heroVideo.value.style.display = 'none'
@@ -238,19 +246,17 @@ const handleAddToCart = (excursion) => {
 onMounted(() => {
   loadExcursions()
   // Добавляем обработчик прокрутки для оптимизации видео (только если видео загружено)
-  if (heroVideo.value) {
-    try {
-      window.addEventListener('scroll', handleScroll, { passive: true })
-      // Проверяем видимость при загрузке (с задержкой, чтобы видео успело загрузиться)
-      setTimeout(() => {
-        if (heroVideo.value && !videoError.value) {
-          handleScroll()
-        }
-      }, 500)
-    } catch (err) {
-      console.warn('Ошибка при настройке обработчика прокрутки:', err)
+  // Проверяем наличие видео через небольшую задержку
+  setTimeout(() => {
+    if (heroVideo.value && !videoError.value) {
+      try {
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        handleScroll()
+      } catch (err) {
+        console.warn('Ошибка при настройке обработчика прокрутки:', err)
+      }
     }
-  }
+  }, 1000)
 })
 
 onUnmounted(() => {
