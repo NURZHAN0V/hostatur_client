@@ -11,7 +11,8 @@ import tailwindcss from '@tailwindcss/vite'
 function fixIndexHtmlPaths() {
   return {
     name: 'fix-index-html-paths',
-    closeBundle() {
+    writeBundle() {
+      // Используем writeBundle вместо closeBundle, чтобы сработать после того, как Vite записал файлы
       const baseUrl = process.env.BASE_URL || '/'
       if (baseUrl === '/') {
         console.log('BASE_URL = /, пропускаем исправление путей')
@@ -42,23 +43,26 @@ function fixIndexHtmlPaths() {
         )
 
         // Исправляем пути к src/main.js (если Vite не заменил его на assets)
-        // Это критично - если Vite не обработал путь, нужно исправить его вручную
-        html = html.replace(
-          /(href|src)="\/src\/main\.js"/g,
-          (match) => {
-            // Если путь не был заменен Vite, пытаемся найти правильный путь к assets
-            // Но лучше просто заменить на правильный путь с base URL
-            // В реальности Vite должен был заменить это на /assets/index-xxx.js
-            console.warn('Обнаружен путь /src/main.js, который должен был быть заменен Vite')
-            // Пытаемся найти правильный путь к главному скрипту в assets
-            const assetMatch = html.match(/(href|src)="\/assets\/index-[^"]+\.js"/)
-            if (assetMatch) {
-              return assetMatch[0].replace(/="\/assets\//, `="${baseUrlNoSlash}/assets/`)
-            }
-            // Если не нашли, просто исправляем путь
-            return match.replace('/src/main.js', `${baseUrlNoSlash}/src/main.js`)
+        // Vite должен заменить /src/main.js на /assets/index-xxx.js, но если этого не произошло,
+        // нужно найти правильный путь к главному скрипту
+        if (html.includes('/src/main.js')) {
+          console.warn('Обнаружен путь /src/main.js, который должен был быть заменен Vite')
+          // Пытаемся найти правильный путь к главному скрипту в assets
+          const assetMatch = html.match(/(href|src)="\/assets\/index-[^"]+\.js"/)
+          if (assetMatch) {
+            // Заменяем /src/main.js на правильный путь к assets с base URL
+            html = html.replace(
+              /(href|src)="\/src\/main\.js"/g,
+              assetMatch[0].replace(/="\/assets\//, `="${baseUrlNoSlash}/assets/`)
+            )
+          } else {
+            // Если не нашли assets, просто исправляем путь с base URL
+            html = html.replace(
+              /(href|src)="\/src\/main\.js"/g,
+              `$1="${baseUrlNoSlash}/src/main.js"`
+            )
           }
-        )
+        }
 
         // Исправляем все остальные пути к src (на случай, если Vite не обработал их)
         html = html.replace(
