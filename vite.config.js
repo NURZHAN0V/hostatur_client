@@ -9,8 +9,19 @@ import tailwindcss from '@tailwindcss/vite'
 
 // Плагин для исправления путей в index.html после сборки
 function fixIndexHtmlPaths() {
+  let mainJsPath = null
+  
   return {
     name: 'fix-index-html-paths',
+    generateBundle(options, bundle) {
+      // Сохраняем путь к главному JS файлу из bundle
+      const jsFiles = Object.keys(bundle).filter(name => name.endsWith('.js'))
+      if (jsFiles.length > 0) {
+        // Ищем главный entry файл
+        mainJsPath = jsFiles.find(name => name.includes('index') || name.includes('main')) || jsFiles[0]
+        console.log('📦 Найден главный JS файл в bundle:', mainJsPath)
+      }
+    },
     writeBundle(options, bundle) {
       // Используем writeBundle с доступом к bundle для проверки созданных файлов
       // Используем buildEnd, чтобы сработать после полной сборки
