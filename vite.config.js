@@ -28,8 +28,17 @@ function fixIndexHtmlPaths() {
 
         // Заменяем абсолютные пути на пути с base URL
         // Ищем паттерны: href="/..." или src="/..." (но не href="//..." или src="//...")
+        // Также не трогаем пути, которые уже содержат base URL
         const beforeReplace = html
-        html = html.replace(/(href|src)="\/(?!\/)/g, `$1="${baseUrlNoSlash}/`)
+        
+        // Сначала проверяем, есть ли пути, которые нужно исправить
+        const pathsToFix = html.match(/(href|src)="\/(?!\/)(?!.*hostatur_client)/g)
+        if (pathsToFix) {
+          console.log('Найдены пути для исправления:', pathsToFix)
+          html = html.replace(/(href|src)="\/(?!\/)/g, `$1="${baseUrlNoSlash}/`)
+        } else {
+          console.log('Пути уже содержат base URL или не требуют исправления')
+        }
 
         // Также исправляем пути, которые могут быть относительными, но должны быть с base
         // Например, если есть пути типа href="./..." которые должны быть href="/hostatur_client/..."
