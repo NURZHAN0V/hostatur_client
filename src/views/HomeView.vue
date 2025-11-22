@@ -2,12 +2,31 @@
   <div>
     <!-- Hero Section -->
     <section class="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
-      <div
-        class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        :style="{ backgroundImage: 'url(https://placehold.net/1920x1080)' }"
+      <!-- Video Background -->
+      <video
+        ref="heroVideo"
+        class="absolute inset-0 w-full h-full object-cover"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1920&h=1080&fit=crop&q=80"
+        @error="handleVideoError"
       >
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
-      </div>
+        <!-- Легковесное видео с пляжем/морем (оптимизированное) -->
+        <source src="https://videos.pexels.com/video-files/3045163/3045163-hd_1920_1080_30fps.mp4" type="video/mp4" />
+        <!-- Альтернативный источник (более легковесный) -->
+        <source src="https://videos.pexels.com/video-files/2491284/2491284-hd_1920_1080_25fps.mp4" type="video/mp4" />
+      </video>
+      <!-- Fallback изображение, если видео не загрузилось -->
+      <div
+        v-if="videoError"
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1920&h=1080&fit=crop&q=80')"
+      ></div>
+      <!-- Overlay для затемнения -->
+      <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
 
       <div class="relative z-10 container mx-auto px-4 text-center text-white">
         <h1 class="text-5xl md:text-7xl font-bold mb-4 animate-fade-in">
@@ -154,7 +173,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ArrowRight } from 'lucide-vue-next'
 import FeatureCard from '@/components/FeatureCard.vue'
@@ -163,6 +182,30 @@ import { useExcursions } from '@/composables/useExcursions'
 
 const { loading, error, getPopularExcursions, loadExcursions, excursions: formattedExcursions } = useExcursions()
 const cartItems = ref([]) // TODO: подключить к store
+const heroVideo = ref(null)
+const videoError = ref(false)
+
+// Обработка ошибки загрузки видео
+const handleVideoError = () => {
+  videoError.value = true
+  console.warn('Видео не загрузилось, используется fallback изображение')
+}
+
+// Оптимизация: приостанавливаем видео, когда пользователь прокрутил страницу
+const handleScroll = () => {
+  if (heroVideo.value && !videoError.value) {
+    const rect = heroVideo.value.getBoundingClientRect()
+    const isVisible = rect.top < window.innerHeight && rect.bottom > 0
+
+    if (isVisible && heroVideo.value.paused) {
+      heroVideo.value.play().catch(() => {
+        // Игнорируем ошибки автовоспроизведения
+      })
+    } else if (!isVisible && !heroVideo.value.paused) {
+      heroVideo.value.pause()
+    }
+  }
+}
 
 const popularExcursions = computed(() => {
   return getPopularExcursions(6)
@@ -179,6 +222,14 @@ const handleAddToCart = (excursion) => {
 
 onMounted(() => {
   loadExcursions()
+  // Добавляем обработчик прокрутки для оптимизации видео
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  // Проверяем видимость при загрузке
+  handleScroll()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
