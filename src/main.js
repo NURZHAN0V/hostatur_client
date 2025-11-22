@@ -6,20 +6,18 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
-console.log('Инициализация приложения...')
-console.log('BASE_URL:', import.meta.env.BASE_URL)
-console.log('MODE:', import.meta.env.MODE)
+// Инициализация приложения
 
-// Глобальная обработка ошибок
+// Глобальная обработка ошибок (только логирование, не блокируем)
 window.addEventListener('error', (event) => {
   console.error('Глобальная ошибка:', event.error)
   console.error('Файл:', event.filename, 'Строка:', event.lineno)
-  event.preventDefault()
+  // НЕ вызываем preventDefault, чтобы браузер мог обработать ошибку нормально
 })
 
 window.addEventListener('unhandledrejection', (event) => {
   console.error('Необработанное отклонение промиса:', event.reason)
-  event.preventDefault()
+  // НЕ вызываем preventDefault, чтобы браузер мог обработать ошибку нормально
 })
 
 const app = createApp(App)
@@ -42,7 +40,6 @@ app.config.warnHandler = (msg, instance, trace) => {
 
 try {
   app.mount('#app')
-  console.log('Приложение успешно смонтировано')
 } catch (err) {
   console.error('Ошибка монтирования приложения:', err)
   // Показываем ошибку пользователю

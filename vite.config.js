@@ -30,7 +30,7 @@ function fixIndexHtmlPaths() {
         // Ищем паттерны: href="/..." или src="/..." (но не href="//..." или src="//...")
         // Также не трогаем пути, которые уже содержат base URL
         const beforeReplace = html
-        
+
         // Сначала проверяем, есть ли пути, которые нужно исправить
         const pathsToFix = html.match(/(href|src)="\/(?!\/)(?!.*hostatur_client)/g)
         if (pathsToFix) {

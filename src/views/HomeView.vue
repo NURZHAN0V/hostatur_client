@@ -154,7 +154,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ArrowRight } from 'lucide-vue-next'
 import FeatureCard from '@/components/FeatureCard.vue'
@@ -165,15 +165,8 @@ const { loading, error, getPopularExcursions, loadExcursions, excursions: format
 const cartItems = ref([]) // TODO: подключить к store
 
 const popularExcursions = computed(() => {
-  const result = getPopularExcursions(6)
-  console.log('Популярные экскурсии:', result.length, result)
-  return result
+  return getPopularExcursions(6)
 })
-
-// Отладочная информация
-watch(() => formattedExcursions.value, (newVal) => {
-  console.log('Экскурсии изменились:', newVal.length)
-}, { immediate: true })
 
 const isInCart = (id) => {
   return cartItems.value.some(item => item.id === id)
