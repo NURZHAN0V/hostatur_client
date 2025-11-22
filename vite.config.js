@@ -28,21 +28,15 @@ function fixIndexHtmlPaths() {
 
         // Заменяем абсолютные пути на пути с base URL
         // Ищем паттерны: href="/..." или src="/..." (но не href="//..." или src="//...")
-        // Также не трогаем пути, которые уже содержат base URL
+        // Исключаем пути, которые уже содержат base URL или являются внешними ссылками
         const beforeReplace = html
 
-        // Сначала проверяем, есть ли пути, которые нужно исправить
-        const pathsToFix = html.match(/(href|src)="\/(?!\/)(?!.*hostatur_client)/g)
-        if (pathsToFix) {
-          console.log('Найдены пути для исправления:', pathsToFix)
-          html = html.replace(/(href|src)="\/(?!\/)/g, `$1="${baseUrlNoSlash}/`)
-        } else {
-          console.log('Пути уже содержат base URL или не требуют исправления')
-        }
-
-        // Также исправляем пути, которые могут быть относительными, но должны быть с base
-        // Например, если есть пути типа href="./..." которые должны быть href="/hostatur_client/..."
-        // Но это обычно не нужно, так как Vite уже обрабатывает это
+        // Исправляем пути, которые начинаются с /, но не содержат base URL
+        // Это включает пути к assets, которые Vite уже обработал
+        html = html.replace(
+          /(href|src)="\/(?!\/)(?!.*(?:hostatur_client|http|https|data:|mailto:|tel:))/g,
+          `$1="${baseUrlNoSlash}/`
+        )
 
         if (beforeReplace !== html) {
           writeFileSync(distIndexPath, html, 'utf-8')
