@@ -11,8 +11,8 @@ import tailwindcss from '@tailwindcss/vite'
 function fixIndexHtmlPaths() {
   return {
     name: 'fix-index-html-paths',
-    writeBundle() {
-      // Используем writeBundle вместо closeBundle, чтобы сработать после того, как Vite записал файлы
+    buildEnd() {
+      // Используем buildEnd, чтобы сработать после полной сборки
       const baseUrl = process.env.BASE_URL || '/'
       if (baseUrl === '/') {
         console.log('BASE_URL = /, пропускаем исправление путей')
@@ -22,7 +22,9 @@ function fixIndexHtmlPaths() {
       const distIndexPath = resolve(__dirname, 'dist/index.html')
       try {
         let html = readFileSync(distIndexPath, 'utf-8')
-        console.log('Исходный index.html (первые 500 символов):', html.substring(0, 500))
+        console.log('=== Начало обработки index.html ===')
+        console.log('BASE_URL:', baseUrl)
+        console.log('Исходный index.html (первые 1000 символов):', html.substring(0, 1000))
 
         // Убираем завершающий слэш из baseUrl для правильной замены
         const baseUrlNoSlash = baseUrl.replace(/\/$/, '')
@@ -42,28 +44,39 @@ function fixIndexHtmlPaths() {
           `$1="${baseUrlNoSlash}/assets/`
         )
 
-        // Исправляем пути к src/main.js (если Vite не заменил его на assets)
-        // Vite должен заменить /src/main.js на /assets/index-xxx.js, но если этого не произошло,
-        // нужно найти правильный путь к главному скрипту
+        // КРИТИЧЕСКИ ВАЖНО: Исправляем пути к src/main.js
+        // Vite должен заменить /src/main.js на /assets/index-xxx.js, но с base URL это может не работать
+        // Поэтому ищем все JS файлы в assets и заменяем /src/main.js на правильный путь
         if (html.includes('/src/main.js')) {
-          console.warn('Обнаружен путь /src/main.js, который должен был быть заменен Vite')
-          // Пытаемся найти правильный путь к главному скрипту в assets
-          // Ищем любой JS файл в assets, который может быть главным скриптом
-          const assetMatches = html.matchAll(/(href|src)="\/assets\/[^"]+\.js"/g)
-          const assetArray = Array.from(assetMatches)
+          console.warn('⚠️ Обнаружен путь /src/main.js, который должен был быть заменен Vite')
 
-          if (assetArray.length > 0) {
-            // Берем первый найденный JS файл из assets (обычно это главный скрипт)
-            const mainAsset = assetArray[0][0]
-            console.log('Найден главный скрипт в assets:', mainAsset)
-            // Заменяем /src/main.js на правильный путь к assets с base URL
+          // Ищем ВСЕ JS файлы в assets
+          const allJsMatches = html.matchAll(/(href|src)="\/assets\/[^"]+\.js"/g)
+          const jsFiles = Array.from(allJsMatches).map(m => m[0])
+          console.log('Найдены JS файлы в assets:', jsFiles)
+
+          if (jsFiles.length > 0) {
+            // Ищем главный скрипт - обычно это index-xxx.js или самый большой файл
+            // Сначала ищем index-xxx.js
+            let mainAsset = jsFiles.find(f => f.includes('index-'))
+            if (!mainAsset) {
+              // Если нет index-, берем первый
+              mainAsset = jsFiles[0]
+            }
+
+            console.log('Используем главный скрипт:', mainAsset)
+            const correctedPath = mainAsset.replace(/="\/assets\//, `="${baseUrlNoSlash}/assets/`)
+            console.log('Исправленный путь:', correctedPath)
+
+            // Заменяем /src/main.js на правильный путь
             html = html.replace(
               /(href|src)="\/src\/main\.js"/g,
-              mainAsset.replace(/="\/assets\//, `="${baseUrlNoSlash}/assets/`)
+              correctedPath
             )
+            console.log('✅ Заменен /src/main.js на:', correctedPath)
           } else {
-            console.warn('Не найден главный скрипт в assets, исправляем путь с base URL')
-            // Если не нашли assets, просто исправляем путь с base URL
+            console.error('❌ Не найдены JS файлы в assets!')
+            // В крайнем случае исправляем путь с base URL
             html = html.replace(
               /(href|src)="\/src\/main\.js"/g,
               `$1="${baseUrlNoSlash}/src/main.js"`
@@ -85,10 +98,12 @@ function fixIndexHtmlPaths() {
 
         if (beforeReplace !== html) {
           writeFileSync(distIndexPath, html, 'utf-8')
-          console.log('Исправлены пути в index.html с base URL:', baseUrl)
-          console.log('Исправленный index.html (первые 500 символов):', html.substring(0, 500))
+          console.log('✅ Исправлены пути в index.html с base URL:', baseUrl)
+          console.log('Исправленный index.html (первые 1000 символов):', html.substring(0, 1000))
+          console.log('=== Конец обработки index.html ===')
         } else {
-          console.log('Пути в index.html не требуют исправления')
+          console.log('⚠️ Пути в index.html не требуют исправления (возможно, проблема!)')
+          console.log('Проверяем содержимое:', html.substring(0, 1000))
         }
       } catch (err) {
         // Игнорируем ошибку, если файл не найден (может быть в dev режиме)
