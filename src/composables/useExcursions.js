@@ -14,7 +14,9 @@ export function useExcursions() {
     error.value = null
 
     try {
-      const response = await fetch('/json/excursions_complete.json')
+      const baseUrl = import.meta.env.BASE_URL
+      const jsonPath = `${baseUrl}json/excursions_complete.json`
+      const response = await fetch(jsonPath)
       if (!response.ok) {
         throw new Error('Не удалось загрузить данные об экскурсиях')
       }
@@ -50,13 +52,13 @@ export function useExcursions() {
   // Создаем ID из URL (извлекаем slug)
   const createIdFromUrl = (url) => {
     if (!url) return Math.random().toString(36).substr(2, 9)
-    
+
     try {
       // Извлекаем последнюю часть пути перед .html
       const urlObj = new URL(url)
       const pathParts = urlObj.pathname.split('/').filter(Boolean)
       const lastPart = pathParts[pathParts.length - 1] || ''
-      
+
       // Убираем расширение .html и возвращаем slug
       const slug = lastPart.replace(/\.html$/, '').replace(/-detail$/, '')
       return slug || Math.random().toString(36).substr(2, 9)
@@ -73,7 +75,7 @@ export function useExcursions() {
   // Форматируем экскурсию для отображения
   const formatExcursion = (excursion, index) => {
     const mainImage = excursion.images?.find(img => img.is_main) || excursion.images?.[0]
-    
+
     return {
       id: createIdFromUrl(excursion.url) || `excursion-${index}`,
       title: excursion.title?.replace(/^Экскурсии\s*:\s*/i, '') || 'Экскурсия',
@@ -94,8 +96,8 @@ export function useExcursions() {
     return excursions.value
       .filter(ex => {
         // Фильтруем некорректные записи
-        return ex.title && 
-               !ex.title.includes('404') && 
+        return ex.title &&
+               !ex.title.includes('404') &&
                !ex.title.includes('не существует')
       })
       .map((ex, index) => formatExcursion(ex, index))
@@ -113,12 +115,12 @@ export function useExcursions() {
   const getExcursionById = (id) => {
     // Ищем по ID (slug)
     let found = formattedExcursions.value.find(ex => ex.id === id)
-    
+
     // Если не найдено, пробуем найти по URL (для обратной совместимости)
     if (!found && id.includes('http')) {
       found = formattedExcursions.value.find(ex => ex.url === id)
     }
-    
+
     // Если все еще не найдено, пробуем найти по части URL
     if (!found) {
       const slugFromId = id.split('/').pop()?.replace(/\.html$/, '').replace(/-detail$/, '')
@@ -126,7 +128,7 @@ export function useExcursions() {
         found = formattedExcursions.value.find(ex => ex.id === slugFromId)
       }
     }
-    
+
     return found
   }
 

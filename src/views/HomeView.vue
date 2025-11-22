@@ -8,7 +8,7 @@
       >
         <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
       </div>
-      
+
       <div class="relative z-10 container mx-auto px-4 text-center text-white">
         <h1 class="text-5xl md:text-7xl font-bold mb-4 animate-fade-in">
           Приключения и развлечения
@@ -85,10 +85,22 @@
         <!-- Loading State -->
         <div v-if="loading" class="text-center py-12">
           <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p class="mt-4 text-muted-foreground">Загрузка экскурсий...</p>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="text-center py-12">
+          <p class="text-destructive mb-4">{{ error }}</p>
+          <button
+            @click="loadExcursions"
+            class="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+          >
+            Попробовать снова
+          </button>
         </div>
 
         <!-- Excursions Grid -->
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-else-if="popularExcursions.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <ExcursionCard
             v-for="excursion in popularExcursions"
             :key="excursion.id"
@@ -98,7 +110,12 @@
           />
         </div>
 
-        <div class="text-center mt-12">
+        <!-- Empty State -->
+        <div v-else class="text-center py-12">
+          <p class="text-muted-foreground text-lg">Экскурсии не найдены</p>
+        </div>
+
+        <div v-if="!loading && !error && popularExcursions.length > 0" class="text-center mt-12">
           <RouterLink
             to="/excursions"
             class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-all"
@@ -144,7 +161,7 @@ import FeatureCard from '@/components/FeatureCard.vue'
 import ExcursionCard from '@/components/ExcursionCard.vue'
 import { useExcursions } from '@/composables/useExcursions'
 
-const { loading, getPopularExcursions, loadExcursions } = useExcursions()
+const { loading, error, getPopularExcursions, loadExcursions } = useExcursions()
 const cartItems = ref([]) // TODO: подключить к store
 
 const popularExcursions = computed(() => getPopularExcursions(6))
