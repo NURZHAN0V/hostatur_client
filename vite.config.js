@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
-import { readFileSync, writeFileSync } from 'fs'
+import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs'
 import { resolve } from 'path'
 
 import { defineConfig } from 'vite'
@@ -48,14 +48,57 @@ function processIndexHtml(distIndexPath, baseUrl) {
         )
         console.log('✅ Заменен /src/main.js на:', correctedPath)
       } else {
-        console.error('❌ НЕ НАЙДЕНЫ JS ФАЙЛЫ В ASSETS!')
+        console.error('❌ НЕ НАЙДЕНЫ JS ФАЙЛЫ В HTML!')
         console.error('Полный HTML:', html)
-        // В крайнем случае просто добавляем base URL
-        html = html.replace(
-          /(href|src)="\/src\/main\.js"/g,
-          `$1="${baseUrlNoSlash}/src/main.js"`
-        )
-        console.warn('⚠️ Использован fallback путь:', `${baseUrlNoSlash}/src/main.js`)
+        
+        // Пытаемся найти JS файлы в файловой системе
+        const distAssetsPath = resolve(__dirname, 'dist/assets')
+        if (existsSync(distAssetsPath)) {
+          try {
+            const files = readdirSync(distAssetsPath)
+            const jsFile = files.find(f => f.endsWith('.js') && (f.includes('index') || f.includes('main')))
+            if (jsFile) {
+              const correctedPath = `src="${baseUrlNoSlash}/assets/${jsFile}"`
+              console.log('Найден JS файл в файловой системе:', jsFile)
+              console.log('Исправленный путь:', correctedPath)
+              
+              html = html.replace(
+                /(href|src)="\/src\/main\.js"/g,
+                correctedPath
+              )
+              console.log('✅ Заменен /src/main.js на путь из файловой системы:', correctedPath)
+            } else {
+              // Если не нашли, берем первый JS файл
+              const firstJsFile = files.find(f => f.endsWith('.js'))
+              if (firstJsFile) {
+                const correctedPath = `src="${baseUrlNoSlash}/assets/${firstJsFile}"`
+                console.log('Найден первый JS файл:', firstJsFile)
+                html = html.replace(
+                  /(href|src)="\/src\/main\.js"/g,
+                  correctedPath
+                )
+                console.log('✅ Заменен /src/main.js на:', correctedPath)
+              } else {
+                throw new Error('Не найдены JS файлы в dist/assets')
+              }
+            }
+          } catch (err) {
+            console.error('Ошибка при поиске JS файлов в файловой системе:', err)
+            // В крайнем случае просто добавляем base URL
+            html = html.replace(
+              /(href|src)="\/src\/main\.js"/g,
+              `$1="${baseUrlNoSlash}/src/main.js"`
+            )
+            console.warn('⚠️ Использован fallback путь:', `${baseUrlNoSlash}/src/main.js`)
+          }
+        } else {
+          // В крайнем случае просто добавляем base URL
+          html = html.replace(
+            /(href|src)="\/src\/main\.js"/g,
+            `$1="${baseUrlNoSlash}/src/main.js"`
+          )
+          console.warn('⚠️ Использован fallback путь:', `${baseUrlNoSlash}/src/main.js`)
+        }
       }
     }
 
@@ -94,6 +137,19 @@ function processIndexHtml(distIndexPath, baseUrl) {
 function fixIndexHtmlPaths() {
   return {
     name: 'fix-index-html-paths',
+    transformIndexHtml(html) {
+      // Обрабатываем index.html во время трансформации Vite
+      // Это позволяет исправить пути до того, как Vite обработает их
+      const baseUrl = process.env.BASE_URL || '/'
+      if (baseUrl === '/') {
+        return html // Не нужно исправлять для корневого пути
+      }
+
+      // Если есть /src/main.js, Vite должен обработать его позже
+      // Но мы можем подготовить путь заранее
+      // Пока просто возвращаем HTML как есть - Vite обработает его
+      return html
+    },
     writeBundle() {
       // Используем writeBundle, чтобы сработать после записи файлов
       const baseUrl = process.env.BASE_URL || '/'
