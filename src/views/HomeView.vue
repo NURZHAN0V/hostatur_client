@@ -11,28 +11,30 @@
         loop
         playsinline
         preload="metadata"
-        poster="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1920&h=1080&fit=crop&q=80"
         @error="handleVideoError"
       >
-        <!-- Легковесное видео с пляжем/морем (оптимизированное) -->
-        <source src="https://videos.pexels.com/video-files/3045163/3045163-hd_1920_1080_30fps.mp4" type="video/mp4" />
-        <!-- Альтернативный источник (более легковесный) -->
-        <source src="https://videos.pexels.com/video-files/2491284/2491284-hd_1920_1080_25fps.mp4" type="video/mp4" />
+        <!-- Видео доступное в РФ (используем placeholder, так как внешние источники могут быть недоступны) -->
+        <!-- Если у вас есть локальное видео, поместите его в public/videos/hero.mp4 и раскомментируйте: -->
+        <!-- <source :src="`${import.meta.env.BASE_URL}videos/hero.mp4`" type="video/mp4" /> -->
       </video>
-      <!-- Fallback изображение, если видео не загрузилось -->
+      <!-- Fallback: красивый градиент с морем/горами -->
       <div
-        v-if="videoError"
-        class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1920&h=1080&fit=crop&q=80')"
-      ></div>
+        v-if="videoError || !heroVideo"
+        class="absolute inset-0 bg-gradient-to-br from-blue-400 via-teal-500 to-cyan-600"
+      >
+        <!-- Дополнительный градиент для глубины -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+        <!-- Декоративные элементы (волны) -->
+        <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white/10 to-transparent"></div>
+      </div>
       <!-- Overlay для затемнения -->
       <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
 
       <div class="relative z-10 container mx-auto px-4 text-center text-white">
-        <h1 class="text-5xl md:text-7xl font-bold mb-4 animate-fade-in leonov-font">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 animate-fade-in leonov-font break-words">
           Приключения и развлечения
         </h1>
-        <h2 class="text-3xl md:text-5xl font-bold mb-6 text-accent animate-fade-in-delay leonov-font">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-accent animate-fade-in-delay leonov-font break-words">
           Яркий отдых
         </h2>
         <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto animate-fade-in-delay-2">

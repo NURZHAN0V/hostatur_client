@@ -77,11 +77,14 @@ const getServiceImage = (serviceId) => {
     if (!serviceId) {
       return 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent(props.title || 'Service')
     }
+    // Используем placeholder изображения, так как внешние источники могут быть недоступны
+    // Если у вас есть локальные изображения, поместите их в public/images/services/ и используйте:
+    // return `${import.meta.env.BASE_URL}images/services/${serviceId}.jpg`
     const images = {
-      guides: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop',
-      events: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&h=400&fit=crop',
-      transfer: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&h=400&fit=crop',
-      accommodation: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop',
+      guides: 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent('Гиды-переводчики'),
+      events: 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent('Мероприятия'),
+      transfer: 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent('Трансфер'),
+      accommodation: 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent('Размещение'),
     }
     return images[serviceId] || 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent(props.title || 'Service')
   } catch (err) {
