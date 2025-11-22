@@ -12,7 +12,7 @@ function fixIndexHtmlPaths() {
   return {
     name: 'fix-index-html-paths',
     writeBundle() {
-      // Используем writeBundle вместо closeBundle, чтобы сработать после записи файлов
+      // Используем writeBundle, чтобы сработать после записи файлов
       const baseUrl = process.env.BASE_URL || '/'
       if (baseUrl === '/') {
         console.log('BASE_URL = /, пропускаем исправление путей')
@@ -22,7 +22,9 @@ function fixIndexHtmlPaths() {
       const distIndexPath = resolve(__dirname, 'dist/index.html')
       try {
         let html = readFileSync(distIndexPath, 'utf-8')
-        console.log('Исходный index.html (первые 500 символов):', html.substring(0, 500))
+        console.log('=== НАЧАЛО ОБРАБОТКИ index.html ===')
+        console.log('BASE_URL:', baseUrl)
+        console.log('Исходный index.html (первые 1000 символов):', html.substring(0, 1000))
 
         // Убираем завершающий слэш из baseUrl для правильной замены
         const baseUrlNoSlash = baseUrl.replace(/\/$/, '')
@@ -38,18 +40,24 @@ function fixIndexHtmlPaths() {
 
         // КРИТИЧЕСКИ ВАЖНО: Если есть /src/main.js, нужно заменить его на правильный путь к assets
         if (html.includes('/src/main.js')) {
-          console.warn('⚠️ Обнаружен путь /src/main.js, ищем правильный путь к главному скрипту')
-          
+          console.warn('⚠️ Обнаружен путь /src/main.js, который должен был быть заменен Vite')
+
           // Ищем JS файлы в assets
           const jsMatches = html.matchAll(/(href|src)="\/assets\/[^"]+\.js"/g)
           const jsFiles = Array.from(jsMatches).map(m => m[0])
-          
+          console.log('Найдены JS файлы в HTML:', jsFiles)
+
           if (jsFiles.length > 0) {
             // Ищем главный скрипт (обычно index-xxx.js)
-            const mainAsset = jsFiles.find(f => f.includes('index-')) || jsFiles[0]
+            let mainAsset = jsFiles.find(f => f.includes('index-'))
+            if (!mainAsset) {
+              mainAsset = jsFiles[0] // Берем первый, если нет index-
+            }
+            console.log('Выбран главный скрипт:', mainAsset)
+
             const correctedPath = mainAsset.replace(/="\/assets\//, `="${baseUrlNoSlash}/assets/`)
-            console.log('Найден главный скрипт:', correctedPath)
-            
+            console.log('Исправленный путь:', correctedPath)
+
             // Заменяем /src/main.js на правильный путь
             html = html.replace(
               /(href|src)="\/src\/main\.js"/g,
@@ -57,11 +65,14 @@ function fixIndexHtmlPaths() {
             )
             console.log('✅ Заменен /src/main.js на:', correctedPath)
           } else {
-            // Если не нашли assets, просто добавляем base URL
+            console.error('❌ НЕ НАЙДЕНЫ JS ФАЙЛЫ В ASSETS!')
+            console.error('Полный HTML:', html)
+            // В крайнем случае просто добавляем base URL
             html = html.replace(
               /(href|src)="\/src\/main\.js"/g,
               `$1="${baseUrlNoSlash}/src/main.js"`
             )
+            console.warn('⚠️ Использован fallback путь:', `${baseUrlNoSlash}/src/main.js`)
           }
         }
 
@@ -79,10 +90,13 @@ function fixIndexHtmlPaths() {
 
         if (beforeReplace !== html) {
           writeFileSync(distIndexPath, html, 'utf-8')
-          console.log('Исправлены пути в index.html с base URL:', baseUrl)
-          console.log('Исправленный index.html (первые 500 символов):', html.substring(0, 500))
+          console.log('✅ Исправлены пути в index.html с base URL:', baseUrl)
+          console.log('Исправленный index.html (первые 1000 символов):', html.substring(0, 1000))
+          console.log('=== КОНЕЦ ОБРАБОТКИ index.html ===')
         } else {
-          console.log('Пути в index.html не требуют исправления')
+          console.log('⚠️ Пути в index.html не требуют исправления (возможно, проблема!)')
+          console.log('Проверяем содержимое:', html.substring(0, 1000))
+          console.log('=== КОНЕЦ ОБРАБОТКИ index.html ===')
         }
       } catch (err) {
         // Игнорируем ошибку, если файл не найден (может быть в dev режиме)
