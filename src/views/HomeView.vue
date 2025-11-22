@@ -154,17 +154,26 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ArrowRight } from 'lucide-vue-next'
 import FeatureCard from '@/components/FeatureCard.vue'
 import ExcursionCard from '@/components/ExcursionCard.vue'
 import { useExcursions } from '@/composables/useExcursions'
 
-const { loading, error, getPopularExcursions, loadExcursions } = useExcursions()
+const { loading, error, getPopularExcursions, loadExcursions, excursions: formattedExcursions } = useExcursions()
 const cartItems = ref([]) // TODO: подключить к store
 
-const popularExcursions = computed(() => getPopularExcursions(6))
+const popularExcursions = computed(() => {
+  const result = getPopularExcursions(6)
+  console.log('Популярные экскурсии:', result.length, result)
+  return result
+})
+
+// Отладочная информация
+watch(() => formattedExcursions.value, (newVal) => {
+  console.log('Экскурсии изменились:', newVal.length)
+}, { immediate: true })
 
 const isInCart = (id) => {
   return cartItems.value.some(item => item.id === id)

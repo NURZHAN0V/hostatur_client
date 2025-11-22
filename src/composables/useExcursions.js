@@ -14,17 +14,34 @@ export function useExcursions() {
     error.value = null
 
     try {
-      const baseUrl = import.meta.env.BASE_URL
-      const jsonPath = `${baseUrl}json/excursions_complete.json`
+      const baseUrl = import.meta.env.BASE_URL || '/'
+      // Убираем двойные слэши
+      const jsonPath = `${baseUrl}json/excursions_complete.json`.replace(/([^:]\/)\/+/g, '$1')
+      console.log('Загрузка экскурсий из:', jsonPath)
+      console.log('BASE_URL:', baseUrl)
+
       const response = await fetch(jsonPath)
       if (!response.ok) {
-        throw new Error('Не удалось загрузить данные об экскурсиях')
+        throw new Error(`Не удалось загрузить данные об экскурсиях: ${response.status} ${response.statusText}`)
       }
       const data = await response.json()
-      excursions.value = data.excursions || []
+      console.log('Загружено экскурсий:', data.excursions?.length || 0)
+      console.log('Структура данных:', { total: data.total, hasExcursions: !!data.excursions })
+
+      if (!data.excursions || !Array.isArray(data.excursions)) {
+        throw new Error('Некорректная структура данных: отсутствует массив excursions')
+      }
+
+      excursions.value = data.excursions
+      console.log('Экскурсии успешно загружены:', excursions.value.length)
     } catch (err) {
       error.value = err.message
       console.error('Ошибка загрузки экскурсий:', err)
+      console.error('Детали ошибки:', {
+        message: err.message,
+        stack: err.stack,
+        baseUrl: import.meta.env.BASE_URL
+      })
     } finally {
       loading.value = false
     }
@@ -93,14 +110,27 @@ export function useExcursions() {
   }
 
   const formattedExcursions = computed(() => {
-    return excursions.value
-      .filter(ex => {
-        // Фильтруем некорректные записи
-        return ex.title &&
-               !ex.title.includes('404') &&
-               !ex.title.includes('не существует')
-      })
-      .map((ex, index) => formatExcursion(ex, index))
+    const filtered = excursions.value.filter(ex => {
+      // Фильтруем некорректные записи
+      const isValid = ex.title &&
+                      !ex.title.includes('404') &&
+                      !ex.title.includes('не существует')
+      return isValid
+    })
+
+    console.log('Отфильтровано экскурсий:', filtered.length, 'из', excursions.value.length)
+
+    const formatted = filtered.map((ex, index) => {
+      try {
+        return formatExcursion(ex, index)
+      } catch (err) {
+        console.error('Ошибка форматирования экскурсии:', err, ex)
+        return null
+      }
+    }).filter(Boolean)
+
+    console.log('Отформатировано экскурсий:', formatted.length)
+    return formatted
   })
 
   const excursionsByCategory = computed(() => {
