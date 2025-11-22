@@ -33,9 +33,17 @@ function fixIndexHtmlPaths() {
 
         // Исправляем пути, которые начинаются с /, но не содержат base URL
         // Это включает пути к assets, которые Vite уже обработал
+        // Исключаем внешние ссылки и пути, которые уже содержат base URL
         html = html.replace(
-          /(href|src)="\/(?!\/)(?!.*(?:hostatur_client|http|https|data:|mailto:|tel:))/g,
+          /(href|src)="\/(?!\/)(?!.*(?:hostatur_client|http|https|data:|mailto:|tel:|#))/g,
           `$1="${baseUrlNoSlash}/`
+        )
+        
+        // Также исправляем пути к assets, которые Vite может создать без base URL
+        // Например: /assets/main.js -> /hostatur_client/assets/main.js
+        html = html.replace(
+          /(href|src)="\/assets\//g,
+          `$1="${baseUrlNoSlash}/assets/`
         )
 
         if (beforeReplace !== html) {
