@@ -15,7 +15,7 @@
         @loadeddata="handleVideoLoaded"
       >
         <!-- Локальное видео (приоритет) - поместите видео в public/videos/hero.mp4 -->
-        <source :src="`${import.meta.env.BASE_URL}videos/hero.mp4`" type="video/mp4" />
+        <source :src="videoPath" type="video/mp4" />
         <!-- Альтернативные источники видео (может быть недоступно в РФ) -->
         <!-- Можно попробовать другие CDN или использовать только локальное видео -->
       </video>
@@ -188,6 +188,10 @@ const { loading, error, getPopularExcursions, loadExcursions, excursions: format
 const cartItems = ref([]) // TODO: подключить к store
 const heroVideo = ref(null)
 const videoError = ref(false) // Начинаем с false, проверяем загрузку
+
+// Путь к видео
+const baseUrl = import.meta.env.BASE_URL || '/'
+const videoPath = computed(() => `${baseUrl}videos/hero.mp4`)
 
 // Обработка успешной загрузки видео
 const handleVideoLoaded = () => {
