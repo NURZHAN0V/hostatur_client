@@ -263,8 +263,21 @@
                 <DollarSign class="w-5 h-5" />
                 Дополнительные расходы
               </h3>
-              <div class="space-y-2 text-sm text-muted-foreground">
-                <p>{{ excursion.additionalCosts }}</p>
+              <div class="space-y-3">
+                <!-- Если это массив -->
+                <div
+                  v-if="Array.isArray(excursion.additionalCosts)"
+                  v-for="(cost, index) in excursion.additionalCosts"
+                  :key="index"
+                  class="flex items-start justify-between gap-4 p-3 bg-muted/50 rounded-lg"
+                >
+                  <div class="flex-1">
+                    <p class="font-medium text-foreground">{{ cost.description || cost }}</p>
+                  </div>
+                  <span class="text-primary font-semibold whitespace-nowrap">{{ cost.price || cost }}</span>
+                </div>
+                <!-- Если это строка -->
+                <p v-else class="text-sm text-muted-foreground">{{ excursion.additionalCosts }}</p>
               </div>
             </div>
 

@@ -20,11 +20,12 @@
           </li>
         </ul>
       </div>
-      <div class="relative aspect-video rounded-lg overflow-hidden">
+      <div class="relative aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-primary/20 to-accent/20">
         <img
-          :src="`https://placehold.net/600x400`"
+          :src="getServiceImage(id)"
           :alt="title"
           class="w-full h-full object-cover"
+          @error="handleImageError"
         />
       </div>
     </div>
@@ -70,5 +71,19 @@ const iconComponent = computed(() => iconMap[props.icon] || Users)
 const featuresList = computed(() => {
   return props.features.split(',').map(f => f.trim())
 })
+
+const getServiceImage = (serviceId) => {
+  const images = {
+    guides: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop',
+    events: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&h=400&fit=crop',
+    transfer: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&h=400&fit=crop',
+    accommodation: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop',
+  }
+  return images[serviceId] || 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent(props.title)
+}
+
+const handleImageError = (event) => {
+  event.target.src = 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent(props.title)
+}
 </script>
 

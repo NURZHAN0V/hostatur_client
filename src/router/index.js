@@ -3,6 +3,22 @@ import Layout from '@/components/Layout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to, from, savedPosition) {
+    // Если есть якорь в URL, прокручиваем к нему
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth',
+        top: 80, // Отступ для фиксированного хедера
+      }
+    }
+    // Если есть сохраненная позиция (например, при нажатии назад)
+    if (savedPosition) {
+      return savedPosition
+    }
+    // Иначе прокручиваем в начало
+    return { top: 0, behavior: 'smooth' }
+  },
   routes: [
     {
       path: '/',
