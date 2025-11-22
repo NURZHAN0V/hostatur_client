@@ -29,10 +29,10 @@
       <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
 
       <div class="relative z-10 container mx-auto px-4 text-center text-white">
-        <h1 class="text-5xl md:text-7xl font-bold mb-4 animate-fade-in">
+        <h1 class="text-5xl md:text-7xl font-bold mb-4 animate-fade-in" style="font-family: 'Leonov SP', serif;">
           Приключения и развлечения
         </h1>
-        <h2 class="text-3xl md:text-5xl font-bold mb-6 text-accent animate-fade-in-delay">
+        <h2 class="text-3xl md:text-5xl font-bold mb-6 text-accent animate-fade-in-delay" style="font-family: 'Leonov SP', serif;">
           Яркий отдых
         </h2>
         <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto animate-fade-in-delay-2">

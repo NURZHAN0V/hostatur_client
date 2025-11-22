@@ -1,6 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Подключение шрифта Leonov SP */
+@font-face {
+  font-family: 'Leonov SP';
+  src: url('./assets/fonts/Leonov_SP/LeonovSP.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
