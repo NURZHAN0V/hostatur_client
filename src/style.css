@@ -10,6 +10,11 @@
   font-display: swap;
 }
 
+/* Класс для применения шрифта */
+.leonov-font {
+  font-family: 'Leonov SP', serif;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

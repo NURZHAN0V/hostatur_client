@@ -26,7 +26,7 @@
         <RouterLink to="/" class="flex items-center gap-2">
           <PalmTree class="w-6 h-6 text-primary flex-shrink-0" />
           <div class="flex flex-col">
-            <span class="text-xl font-bold text-primary" style="font-family: 'Leonov SP', serif;">Хостинский отдых</span>
+            <span class="text-xl font-bold text-primary leonov-font">Хостинский отдых</span>
             <span class="text-xs text-muted-foreground">г. Сочи</span>
           </div>
         </RouterLink>
