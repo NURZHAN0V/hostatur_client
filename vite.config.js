@@ -11,7 +11,8 @@ import tailwindcss from '@tailwindcss/vite'
 function fixIndexHtmlPaths() {
   return {
     name: 'fix-index-html-paths',
-    buildEnd() {
+    writeBundle(options, bundle) {
+      // Используем writeBundle с доступом к bundle для проверки созданных файлов
       // Используем buildEnd, чтобы сработать после полной сборки
       const baseUrl = process.env.BASE_URL || '/'
       if (baseUrl === '/') {
@@ -46,21 +47,36 @@ function fixIndexHtmlPaths() {
 
         // КРИТИЧЕСКИ ВАЖНО: Исправляем пути к src/main.js
         // Vite должен заменить /src/main.js на /assets/index-xxx.js, но с base URL это может не работать
-        // Поэтому ищем все JS файлы в assets и заменяем /src/main.js на правильный путь
         if (html.includes('/src/main.js')) {
           console.warn('⚠️ Обнаружен путь /src/main.js, который должен был быть заменен Vite')
 
-          // Ищем ВСЕ JS файлы в assets
+          // Сначала проверяем bundle для поиска главного скрипта
+          let mainJsFile = null
+          if (bundle) {
+            // Ищем главный entry файл в bundle
+            const entryFiles = Object.keys(bundle).filter(name =>
+              name.endsWith('.js') && (name.includes('index') || name.includes('main'))
+            )
+            if (entryFiles.length > 0) {
+              mainJsFile = entryFiles[0]
+              console.log('Найден главный скрипт в bundle:', mainJsFile)
+            }
+          }
+
+          // Ищем JS файлы в HTML
           const allJsMatches = html.matchAll(/(href|src)="\/assets\/[^"]+\.js"/g)
           const jsFiles = Array.from(allJsMatches).map(m => m[0])
-          console.log('Найдены JS файлы в assets:', jsFiles)
+          console.log('Найдены JS файлы в HTML:', jsFiles)
 
           if (jsFiles.length > 0) {
-            // Ищем главный скрипт - обычно это index-xxx.js или самый большой файл
-            // Сначала ищем index-xxx.js
+            // Ищем главный скрипт - обычно это index-xxx.js
             let mainAsset = jsFiles.find(f => f.includes('index-'))
+            if (!mainAsset && mainJsFile) {
+              // Если не нашли index-, ищем по имени из bundle
+              mainAsset = jsFiles.find(f => f.includes(mainJsFile.replace('assets/', '')))
+            }
             if (!mainAsset) {
-              // Если нет index-, берем первый
+              // В крайнем случае берем первый
               mainAsset = jsFiles[0]
             }
 
@@ -76,6 +92,7 @@ function fixIndexHtmlPaths() {
             console.log('✅ Заменен /src/main.js на:', correctedPath)
           } else {
             console.error('❌ Не найдены JS файлы в assets!')
+            console.error('Содержимое HTML:', html.substring(0, 2000))
             // В крайнем случае исправляем путь с base URL
             html = html.replace(
               /(href|src)="\/src\/main\.js"/g,
