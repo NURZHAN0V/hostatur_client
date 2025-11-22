@@ -186,24 +186,37 @@ const heroVideo = ref(null)
 const videoError = ref(false)
 
 // Обработка ошибки загрузки видео
-const handleVideoError = () => {
-  videoError.value = true
-  console.warn('Видео не загрузилось, используется fallback изображение')
+const handleVideoError = (event) => {
+  try {
+    videoError.value = true
+    console.warn('Видео не загрузилось, используется fallback изображение')
+    // Скрываем видео элемент
+    if (heroVideo.value) {
+      heroVideo.value.style.display = 'none'
+    }
+  } catch (err) {
+    console.error('Ошибка при обработке ошибки видео:', err)
+  }
 }
 
 // Оптимизация: приостанавливаем видео, когда пользователь прокрутил страницу
 const handleScroll = () => {
-  if (heroVideo.value && !videoError.value) {
-    const rect = heroVideo.value.getBoundingClientRect()
-    const isVisible = rect.top < window.innerHeight && rect.bottom > 0
+  try {
+    if (heroVideo.value && !videoError.value && heroVideo.value.readyState >= 2) {
+      const rect = heroVideo.value.getBoundingClientRect()
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0
 
-    if (isVisible && heroVideo.value.paused) {
-      heroVideo.value.play().catch(() => {
-        // Игнорируем ошибки автовоспроизведения
-      })
-    } else if (!isVisible && !heroVideo.value.paused) {
-      heroVideo.value.pause()
+      if (isVisible && heroVideo.value.paused) {
+        heroVideo.value.play().catch(() => {
+          // Игнорируем ошибки автовоспроизведения
+        })
+      } else if (!isVisible && !heroVideo.value.paused) {
+        heroVideo.value.pause()
+      }
     }
+  } catch (err) {
+    // Игнорируем ошибки при работе с видео
+    console.warn('Ошибка при работе с видео:', err)
   }
 }
 
@@ -222,10 +235,20 @@ const handleAddToCart = (excursion) => {
 
 onMounted(() => {
   loadExcursions()
-  // Добавляем обработчик прокрутки для оптимизации видео
-  window.addEventListener('scroll', handleScroll, { passive: true })
-  // Проверяем видимость при загрузке
-  handleScroll()
+  // Добавляем обработчик прокрутки для оптимизации видео (только если видео загружено)
+  if (heroVideo.value) {
+    try {
+      window.addEventListener('scroll', handleScroll, { passive: true })
+      // Проверяем видимость при загрузке (с задержкой, чтобы видео успело загрузиться)
+      setTimeout(() => {
+        if (heroVideo.value && !videoError.value) {
+          handleScroll()
+        }
+      }, 500)
+    } catch (err) {
+      console.warn('Ошибка при настройке обработчика прокрутки:', err)
+    }
+  }
 })
 
 onUnmounted(() => {
