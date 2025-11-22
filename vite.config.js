@@ -11,7 +11,8 @@ import tailwindcss from '@tailwindcss/vite'
 function fixIndexHtmlPaths() {
   return {
     name: 'fix-index-html-paths',
-    closeBundle() {
+    writeBundle() {
+      // Используем writeBundle вместо closeBundle, чтобы сработать после записи файлов
       const baseUrl = process.env.BASE_URL || '/'
       if (baseUrl === '/') {
         console.log('BASE_URL = /, пропускаем исправление путей')
@@ -35,8 +36,36 @@ function fixIndexHtmlPaths() {
           `$1="${baseUrlNoSlash}/assets/`
         )
 
-        // Исправляем пути к src (на случай, если Vite не обработал их)
-        // Это должно быть обработано Vite, но на всякий случай исправляем
+        // КРИТИЧЕСКИ ВАЖНО: Если есть /src/main.js, нужно заменить его на правильный путь к assets
+        if (html.includes('/src/main.js')) {
+          console.warn('⚠️ Обнаружен путь /src/main.js, ищем правильный путь к главному скрипту')
+          
+          // Ищем JS файлы в assets
+          const jsMatches = html.matchAll(/(href|src)="\/assets\/[^"]+\.js"/g)
+          const jsFiles = Array.from(jsMatches).map(m => m[0])
+          
+          if (jsFiles.length > 0) {
+            // Ищем главный скрипт (обычно index-xxx.js)
+            const mainAsset = jsFiles.find(f => f.includes('index-')) || jsFiles[0]
+            const correctedPath = mainAsset.replace(/="\/assets\//, `="${baseUrlNoSlash}/assets/`)
+            console.log('Найден главный скрипт:', correctedPath)
+            
+            // Заменяем /src/main.js на правильный путь
+            html = html.replace(
+              /(href|src)="\/src\/main\.js"/g,
+              correctedPath
+            )
+            console.log('✅ Заменен /src/main.js на:', correctedPath)
+          } else {
+            // Если не нашли assets, просто добавляем base URL
+            html = html.replace(
+              /(href|src)="\/src\/main\.js"/g,
+              `$1="${baseUrlNoSlash}/src/main.js"`
+            )
+          }
+        }
+
+        // Исправляем остальные пути к src (если есть)
         html = html.replace(
           /(href|src)="\/src\//g,
           `$1="${baseUrlNoSlash}/src/`
