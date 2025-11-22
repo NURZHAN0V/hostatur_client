@@ -2,8 +2,9 @@
   <div>
     <!-- Hero Section -->
     <section class="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
-      <!-- Video Background -->
+      <!-- Video Background (скрыто, так как видео недоступно) -->
       <video
+        v-if="false"
         ref="heroVideo"
         class="absolute inset-0 w-full h-full object-cover"
         autoplay
@@ -19,7 +20,6 @@
       </video>
       <!-- Fallback: красивый градиент с морем/горами -->
       <div
-        v-if="videoError || !heroVideo"
         class="absolute inset-0 bg-gradient-to-br from-blue-400 via-teal-500 to-cyan-600"
       >
         <!-- Дополнительный градиент для глубины -->
@@ -185,7 +185,7 @@ import { useExcursions } from '@/composables/useExcursions'
 const { loading, error, getPopularExcursions, loadExcursions, excursions: formattedExcursions } = useExcursions()
 const cartItems = ref([]) // TODO: подключить к store
 const heroVideo = ref(null)
-const videoError = ref(false)
+const videoError = ref(true) // По умолчанию true, так как видео недоступно
 
 // Обработка ошибки загрузки видео
 const handleVideoError = (event) => {
