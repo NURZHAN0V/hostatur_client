@@ -13,21 +13,40 @@ function fixIndexHtmlPaths() {
     name: 'fix-index-html-paths',
     closeBundle() {
       const baseUrl = process.env.BASE_URL || '/'
-      if (baseUrl === '/') return // Не нужно исправлять для корневого пути
+      if (baseUrl === '/') {
+        console.log('BASE_URL = /, пропускаем исправление путей')
+        return // Не нужно исправлять для корневого пути
+      }
 
       const distIndexPath = resolve(__dirname, 'dist/index.html')
       try {
         let html = readFileSync(distIndexPath, 'utf-8')
-        // Заменяем абсолютные пути на пути с base URL (только для href и src, которые начинаются с /)
-        // Но не трогаем пути, которые уже содержат base URL
+        console.log('Исходный index.html (первые 500 символов):', html.substring(0, 500))
+
+        // Убираем завершающий слэш из baseUrl для правильной замены
         const baseUrlNoSlash = baseUrl.replace(/\/$/, '')
+
+        // Заменяем абсолютные пути на пути с base URL
+        // Ищем паттерны: href="/..." или src="/..." (но не href="//..." или src="//...")
+        const beforeReplace = html
         html = html.replace(/(href|src)="\/(?!\/)/g, `$1="${baseUrlNoSlash}/`)
-        writeFileSync(distIndexPath, html, 'utf-8')
-        console.log('Исправлены пути в index.html с base URL:', baseUrl)
+
+        // Также исправляем пути, которые могут быть относительными, но должны быть с base
+        // Например, если есть пути типа href="./..." которые должны быть href="/hostatur_client/..."
+        // Но это обычно не нужно, так как Vite уже обрабатывает это
+
+        if (beforeReplace !== html) {
+          writeFileSync(distIndexPath, html, 'utf-8')
+          console.log('Исправлены пути в index.html с base URL:', baseUrl)
+          console.log('Исправленный index.html (первые 500 символов):', html.substring(0, 500))
+        } else {
+          console.log('Пути в index.html не требуют исправления')
+        }
       } catch (err) {
         // Игнорируем ошибку, если файл не найден (может быть в dev режиме)
         if (err.code !== 'ENOENT') {
-          console.warn('Не удалось исправить пути в index.html:', err.message)
+          console.error('Не удалось исправить пути в index.html:', err.message)
+          console.error('Ошибка:', err)
         }
       }
     }
