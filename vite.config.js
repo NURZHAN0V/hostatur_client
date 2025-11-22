@@ -50,19 +50,6 @@ function fixIndexHtmlPaths() {
         if (html.includes('/src/main.js')) {
           console.warn('⚠️ Обнаружен путь /src/main.js, который должен был быть заменен Vite')
 
-          // Сначала проверяем bundle для поиска главного скрипта
-          let mainJsFile = null
-          if (bundle) {
-            // Ищем главный entry файл в bundle
-            const entryFiles = Object.keys(bundle).filter(name =>
-              name.endsWith('.js') && (name.includes('index') || name.includes('main'))
-            )
-            if (entryFiles.length > 0) {
-              mainJsFile = entryFiles[0]
-              console.log('Найден главный скрипт в bundle:', mainJsFile)
-            }
-          }
-
           // Ищем JS файлы в HTML
           const allJsMatches = html.matchAll(/(href|src)="\/assets\/[^"]+\.js"/g)
           const jsFiles = Array.from(allJsMatches).map(m => m[0])
@@ -71,9 +58,10 @@ function fixIndexHtmlPaths() {
           if (jsFiles.length > 0) {
             // Ищем главный скрипт - обычно это index-xxx.js
             let mainAsset = jsFiles.find(f => f.includes('index-'))
-            if (!mainAsset && mainJsFile) {
+            if (!mainAsset && mainJsPath) {
               // Если не нашли index-, ищем по имени из bundle
-              mainAsset = jsFiles.find(f => f.includes(mainJsFile.replace('assets/', '')))
+              const bundleFileName = mainJsPath.split('/').pop()
+              mainAsset = jsFiles.find(f => f.includes(bundleFileName))
             }
             if (!mainAsset) {
               // В крайнем случае берем первый
