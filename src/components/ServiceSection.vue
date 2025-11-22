@@ -73,17 +73,31 @@ const featuresList = computed(() => {
 })
 
 const getServiceImage = (serviceId) => {
-  const images = {
-    guides: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop',
-    events: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&h=400&fit=crop',
-    transfer: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&h=400&fit=crop',
-    accommodation: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop',
+  try {
+    if (!serviceId) {
+      return 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent(props.title || 'Service')
+    }
+    const images = {
+      guides: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop',
+      events: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&h=400&fit=crop',
+      transfer: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&h=400&fit=crop',
+      accommodation: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop',
+    }
+    return images[serviceId] || 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent(props.title || 'Service')
+  } catch (err) {
+    console.warn('Ошибка при получении изображения услуги:', err)
+    return 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent(props.title || 'Service')
   }
-  return images[serviceId] || 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent(props.title)
 }
 
 const handleImageError = (event) => {
-  event.target.src = 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent(props.title)
+  try {
+    if (event && event.target) {
+      event.target.src = 'https://placehold.net/600x400/55c4e8/ffffff?text=' + encodeURIComponent(props.title || 'Service')
+    }
+  } catch (err) {
+    console.warn('Ошибка при обработке ошибки изображения:', err)
+  }
 }
 </script>
 
