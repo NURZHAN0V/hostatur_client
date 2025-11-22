@@ -41,15 +41,32 @@ function fixIndexHtmlPaths() {
           `$1="${baseUrlNoSlash}/assets/`
         )
 
-        // Исправляем пути к src (на случай, если Vite не обработал их)
-        // Это должно быть обработано Vite, но на всякий случай исправляем
+        // Исправляем пути к src/main.js (если Vite не заменил его на assets)
+        // Это критично - если Vite не обработал путь, нужно исправить его вручную
+        html = html.replace(
+          /(href|src)="\/src\/main\.js"/g,
+          (match) => {
+            // Если путь не был заменен Vite, пытаемся найти правильный путь к assets
+            // Но лучше просто заменить на правильный путь с base URL
+            // В реальности Vite должен был заменить это на /assets/index-xxx.js
+            console.warn('Обнаружен путь /src/main.js, который должен был быть заменен Vite')
+            // Пытаемся найти правильный путь к главному скрипту в assets
+            const assetMatch = html.match(/(href|src)="\/assets\/index-[^"]+\.js"/)
+            if (assetMatch) {
+              return assetMatch[0].replace(/="\/assets\//, `="${baseUrlNoSlash}/assets/`)
+            }
+            // Если не нашли, просто исправляем путь
+            return match.replace('/src/main.js', `${baseUrlNoSlash}/src/main.js`)
+          }
+        )
+
+        // Исправляем все остальные пути к src (на случай, если Vite не обработал их)
         html = html.replace(
           /(href|src)="\/src\//g,
           `$1="${baseUrlNoSlash}/src/`
         )
 
         // Затем исправляем все остальные абсолютные пути (кроме внешних ссылок и уже обработанных)
-        // Это должно обработать любые другие пути, которые Vite мог пропустить
         html = html.replace(
           /(href|src)="\/(?!\/)(?!.*(?:hostatur_client|http|https|data:|mailto:|tel:|#|assets\/|src\/))/g,
           `$1="${baseUrlNoSlash}/`
